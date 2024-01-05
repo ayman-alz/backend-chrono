@@ -1,0 +1,26 @@
+<?php
+
+include "../connection.php" ; 
+
+$username = filterRequest("username"); 
+$email = filterRequest("email"); 
+$password = filterRequest("password"); 
+
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+
+
+$stmt = $connection->prepare("INSERT INTO `users` (`username`, `email`, `password`) VALUES (?, ?, ?)");
+$stmt-> execute(array($username , $email , $password  )); 
+$count = $stmt-> rowCount();
+
+if($count > 0 ) {
+
+         echo json_encode(array("status" => "success")); 
+}
+ else {
+        echo json_encode(array("status" => "failed"));     
+    }
+
+
+    ?>
