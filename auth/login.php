@@ -13,14 +13,14 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     // Set Content-Type header for JSON response
     header("Content-Type: application/json; charset=UTF-8");
 
-    $stmt = $connection->prepare("SELECT email , id FROM users WHERE `password` = ? AND `email` = ?");
-    $stmt->execute(array($password , $email));
+    $stmt = $connection->prepare("SELECT email , id, password FROM users WHERE `email` = ?");
+    $stmt->execute(array($email));
 
     $data = $stmt -> fetch(PDO::FETCH_ASSOC) ; 
 
     $count = $stmt->rowCount();
 
-    if ($count > 0) {
+    if ($count > 0 && password_verify($password, $data['password'])) {
         echo json_encode(array("status" => "success" , "data" => $data));
     } else {
         echo json_encode(array("status" => "failed"));
